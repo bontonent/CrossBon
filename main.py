@@ -3,13 +3,10 @@ import pandas as pd
 from tqdm import tqdm
 import numpy as np
 import copy
-#copy in clipboard
-import pyperclip
-#pyperclip.copy(mes[1])
 
 # convert from excel to data
-df_jd = pd.read_excel("data_JD.xlsx")
-articles_excel = pd.read_excel("need_articles.xlsx")
+df_jd = pd.read_excel("DATA_JD.xlsx")
+articles_excel = pd.read_excel("Article_need.xlsx")
 articles = articles_excel["Номер 2"] # main key
 
 # create convenient format data
@@ -100,8 +97,9 @@ def add_in_keyboard_db(key, value):
         keyboard_db[key].append(value)
 
 # keyboard_db element use for add data from our DB
-df_have = pd.read_excel("We_have.xlsx")
-for i, data_need in enumerate(df_have.iloc[:,0]):
+df_have = pd.read_excel("Cross_have.xlsx")
+ion = 0
+for i, data_need in enumerate(df_have.loc[:,"Код товара"]):
     element_dd = data_need.replace("DD ","")
     #print(element_dd)
     error = 0
@@ -111,13 +109,12 @@ for i, data_need in enumerate(df_have.iloc[:,0]):
             #print(element_dd)
             break
     if error == 1:
-        #print(element_dd," ", (df_have.iloc[i,2]))
-        add_in_keyboard_db(element_dd,df_have.iloc[i,2])
-
+        for ion,column in enumerate(df_have.columns):
+            if column == "Номер перекрестной ссылки":
+                code = ion
+        add_in_keyboard_db(element_dd,df_have.iloc[i,ion])
 
 for article in tqdm(articles):
-    #print(i," ",article)
-    #print(keyboard[article]," ",keyboard_db[article])
     for keybo in keyboard[article]:
         error = 0
         for keybo_db in keyboard_db[article]:
@@ -128,9 +125,9 @@ for article in tqdm(articles):
 
 place_A = []
 place_FH = []
-for i, article in enumerate(articles):
+for i,article in enumerate(articles):
     if len(resould[article]) != 0:
-        # print(article," ",resould[article])
+        #print(article," ",resould[article])
         for resou_art in resould[article]:
             place_A.append(article)
             place_FH.append(resou_art)
@@ -146,10 +143,4 @@ for i,place in enumerate(place_FH):
 df.loc[:,3] = "OE"
 df.loc[:,6] = "JOHN DEERE"
 
-
-#print(df)
-df.to_excel("DATA.xlsx",index = False,header =False)
-
-
-
-
+df.to_excel("ANSWER.xlsx",index = False,header =False)
