@@ -1,11 +1,13 @@
 # Library
 import pandas as pd
+# time zone
 from tqdm import tqdm
 import numpy as np
-import copy
+# change width
+from openpyxl import load_workbook
 
 # convert from excel to data
-df_jd = pd.read_excel("DATA_JD.xlsx")
+df_jd = pd.read_excel("DATA_JD.xlsx", header = None)
 articles_excel = pd.read_excel("Article_need.xlsx")
 articles = articles_excel["Номер 2"] # main key
 
@@ -14,7 +16,6 @@ mesive = []
 data = np.array(df_jd)
 for work in data:
     mesive.append(list(work))
-work_mesive = copy.deepcopy(mesive[:])
 
 # Create key
 keyboard = {}
@@ -98,7 +99,6 @@ def add_in_keyboard_db(key, value):
 
 # keyboard_db element use for add data from our DB
 df_have = pd.read_excel("Cross_have.xlsx")
-ion = 0
 for i, data_need in enumerate(df_have.loc[:,"Код товара"]):
     element_dd = data_need.replace("DD ","")
     #print(element_dd)
@@ -143,4 +143,22 @@ for i,place in enumerate(place_FH):
 df.loc[:,3] = "OE"
 df.loc[:,6] = "JOHN DEERE"
 
-df.to_excel("ANSWER.xlsx",index = False,header =False)
+#print(df)
+df.to_excel("ANSWER.xlsx" ,index = False,header =False)
+
+from openpyxl import load_workbook
+
+# Завантажте файл Excel
+workbook = load_workbook("ANSWER.xlsx")
+worksheet = workbook.active  # Отримайте активний аркуш
+
+# Задайте ширину стовпців
+worksheet.column_dimensions['A'].width = 20  # Стовпець A
+worksheet.column_dimensions['D'].width = 5  # Стовпець D
+worksheet.column_dimensions['F'].width = 15  # Стовпець F
+worksheet.column_dimensions['G'].width = 12  # Стовпець G
+worksheet.column_dimensions['H'].width = 15  # Стовпець H
+
+# Збережіть зміни в новий файл
+workbook.save("ANSWER.xlsx")
+
