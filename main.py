@@ -5,9 +5,12 @@ from tqdm import tqdm
 import numpy as np
 import sys
 # change width
+# for error and complete
 import PyQt6
 from PyQt6 import QtWidgets
 from openpyxl import load_workbook
+
+# read files, if don't have file. Will say error
 print("Try read excel files")
 try:
     df = pd.read_excel("Article_need.xlsx")
@@ -76,6 +79,8 @@ def add_in_keyboard_left(key, value):
     if error == 0:
         keyboard[key].insert(0,value)
 
+# Cycle for search all data and add all data in under key elements
+# {key: [here]}
 temps = []
 temp = []
 def search_left(key, value):
@@ -109,7 +114,7 @@ def search_right(key, value):
             break;
         else:
             temps = temp
-
+# call all def for two side
 print("Choose necessary data")
 for i, mes in enumerate(tqdm(mesive)):
     for art in articles:
@@ -147,7 +152,7 @@ for i, data_need in enumerate(df_have.loc[:,"Код товара"]):
             if column == "Номер перекрестной ссылки":
                 code = ion
         add_in_keyboard_db(element_dd,df_have.iloc[i,ion])
-
+# work with our Data
 for article in tqdm(articles):
     for keybo in keyboard[article]:
         error = 0
@@ -156,7 +161,7 @@ for article in tqdm(articles):
                 error = 1
         if error == 0:
             resould[article].append(keybo)
-
+# Start work with view file xlsx
 place_A = []
 place_FH = []
 for i,article in enumerate(articles):
@@ -182,22 +187,22 @@ df.to_excel("ANSWER.xlsx" ,index = False,header =False)
 
 from openpyxl import load_workbook
 
-# Завантажте файл Excel
+# covert file in data
 workbook = load_workbook("ANSWER.xlsx")
-worksheet = workbook.active  # Отримайте активний аркуш
+worksheet = workbook.active  # active sheet(in jupyter notebook break xlsx file(don't let change it is file)
 
-# Задайте ширину стовпців
-worksheet.column_dimensions['A'].width = 20  # Стовпець A
-worksheet.column_dimensions['D'].width = 5  # Стовпець D
-worksheet.column_dimensions['F'].width = 15  # Стовпець F
-worksheet.column_dimensions['G'].width = 12  # Стовпець G
-worksheet.column_dimensions['H'].width = 15  # Стовпець H
+# make size width for my data
+worksheet.column_dimensions['A'].width = 20
+worksheet.column_dimensions['D'].width = 5
+worksheet.column_dimensions['F'].width = 15
+worksheet.column_dimensions['G'].width = 12
+worksheet.column_dimensions['H'].width = 15
 
-# Збережіть зміни в новий файл
+# Save
 workbook.save("ANSWER.xlsx")
-
+# We complete all work
 app = QtWidgets.QApplication([])
 error_dialog = QtWidgets.QErrorMessage()
 error_dialog.setWindowTitle("Completed")
-error_dialog.showMessage("Create ANSWER.xlsx")
+error_dialog.showMessage("Created ANSWER.xlsx")
 app.exec()
