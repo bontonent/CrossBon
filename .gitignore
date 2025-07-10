@@ -1,2 +1,7 @@
 *.xlsx
 .venv
+.ipynb_checkpoints
+main_test_code(bad try).ipynb
+build
+main.spec
+dist

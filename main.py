@@ -3,8 +3,42 @@ import pandas as pd
 # time zone
 from tqdm import tqdm
 import numpy as np
+import sys
 # change width
+import PyQt6
+from PyQt6 import QtWidgets
 from openpyxl import load_workbook
+print("Try read excel files")
+try:
+    df = pd.read_excel("Article_need.xlsx")
+except:
+    app = QtWidgets.QApplication([])
+    error_dialog = QtWidgets.QErrorMessage()
+    error_dialog.setWindowTitle("Error")
+    error_dialog.showMessage("Don't have Article_need.xlsx")
+    app.exec()
+    print("Need Article_need.xlsx")
+    sys.exit()
+try:
+    df = pd.read_excel("Cross_have.xlsx")
+except:
+    app = QtWidgets.QApplication([])
+    error_dialog = QtWidgets.QErrorMessage()
+    error_dialog.setWindowTitle("Error")
+    error_dialog.showMessage("Don't have Cross_have.xlsx")
+    app.exec()
+    print("Need Cross_have.xlsx")
+    sys.exit()
+try:
+    df = pd.read_excel("DATA_JD.xlsx")
+except:
+    app = QtWidgets.QApplication([])
+    error_dialog = QtWidgets.QErrorMessage()
+    error_dialog.setWindowTitle("Error")
+    error_dialog.showMessage("Don't have DATA_JD.xlsx")
+    app.exec()
+    print("Need DATA_JD.xlsx")
+    sys.exit()
 
 # convert from excel to data
 df_jd = pd.read_excel("DATA_JD.xlsx", header = None)
@@ -162,3 +196,8 @@ worksheet.column_dimensions['H'].width = 15  # Стовпець H
 # Збережіть зміни в новий файл
 workbook.save("ANSWER.xlsx")
 
+app = QtWidgets.QApplication([])
+error_dialog = QtWidgets.QErrorMessage()
+error_dialog.setWindowTitle("Completed")
+error_dialog.showMessage("Create ANSWER.xlsx")
+app.exec()
