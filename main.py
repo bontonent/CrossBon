@@ -9,7 +9,6 @@ import sys
 import PyQt6
 from PyQt6 import QtWidgets
 from openpyxl import load_workbook
-
 # read files, if don't have file. Will say error
 print("Try read excel files")
 try:
@@ -42,6 +41,7 @@ except:
     app.exec()
     print("Need DATA_JD.xlsx")
     sys.exit()
+# -------------------------- not delete under -----------------------------
 
 # convert from excel to data
 df_jd = pd.read_excel("DATA_JD.xlsx", header = None)
