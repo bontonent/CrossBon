@@ -1,3 +1,4 @@
+import PyQt6
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import QEnterEvent, QIcon
@@ -17,33 +18,19 @@ def main_call(text_code, text):
     try:
         df = pd.read_excel("Article_need.xlsx")
     except:
-        app = QtWidgets.QApplication([])
-        error_dialog = QtWidgets.QErrorMessage()
-        error_dialog.setWindowTitle("Error")
-        error_dialog.showMessage("Don't have Article_need.xlsx")
-        app.exec()
         print("Need Article_need.xlsx")
-        sys.exit()
+        return
     try:
         df = pd.read_excel("Cross_have.xlsx")
     except:
-        app = QtWidgets.QApplication([])
-        error_dialog = QtWidgets.QErrorMessage()
-        error_dialog.setWindowTitle("Error")
-        error_dialog.showMessage("Don't have Cross_have.xlsx")
-        app.exec()
         print("Need Cross_have.xlsx")
-        sys.exit()
+        return
     try:
         df = pd.read_excel("DATA_JD.xlsx")
     except:
-        app = QtWidgets.QApplication([])
-        error_dialog = QtWidgets.QErrorMessage()
-        error_dialog.setWindowTitle("Error")
-        error_dialog.showMessage("Don't have DATA_JD.xlsx")
-        app.exec()
         print("Need DATA_JD.xlsx")
-        sys.exit()
+        return
+
     # -------------------------- not delete under -----------------------------
     # You want get data from Article code (DD code) get code
 
@@ -311,6 +298,7 @@ def main_call(text_code, text):
 
 class MyWindow(QMainWindow):
     def __init__(self):
+
         self.activate_get = 0
         #main
         super().__init__()

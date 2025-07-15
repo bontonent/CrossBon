@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['Program_visual.py'],
+    ['program_visual.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -21,7 +21,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='Program_visual',
+    name='program_visual',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -40,5 +40,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='Program_visual',
+    name='program_visual',
 )
