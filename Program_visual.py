@@ -7,7 +7,7 @@ from tqdm import tqdm
 import pandas as pd
 import numpy as np
 
-def main_call(text_code, text):
+def main_call(text_code, text, get_sts):
     text_code = text_code
     if text_code == None:
         get_art = False
@@ -54,34 +54,37 @@ def main_call(text_code, text):
     ## keyboard[article] = [article] without [DD ]
     if get_art == True:
         for i, article in enumerate(articles):
-            if text_code == 0:
-                print("work 0")
-                keyboard[article] = [article[article.find(" ") + 1:]]
-                # print(article, article[article.find(" ")+1:])
-            elif text_code == 1:  # replace left one
-                # print(article[article.find(" ")+1:])
-                el_art = (article[article.find(" ") + 1:].find(text) + len(text))
-                arg1 = str(article[article.find(" ") + 1:][:el_art].replace(text, ""))
-                arg2 = str(article[article.find(" ") + 1:][el_art:])
-                # print(arg1,arg2)
-                pull = "".join((arg1, arg2))
+            if get_sts == 1:
+                if text_code == 0:
+                    print("work 0")
+                    keyboard[article] = [article[article.find(" ") + 1:]]
+                    # print(article, article[article.find(" ")+1:])
+                elif text_code == 1:  # replace left one
+                    # print(article[article.find(" ")+1:])
+                    el_art = (article[article.find(" ") + 1:].find(text) + len(text))
+                    arg1 = str(article[article.find(" ") + 1:][:el_art].replace(text, ""))
+                    arg2 = str(article[article.find(" ") + 1:][el_art:])
+                    # print(arg1,arg2)
+                    pull = "".join((arg1, arg2))
 
-                keyboard[article] = [pull]
-                # print(article, [article[article.find(" ")+1:].replace(str(text),"")])
-            elif text_code == 2:  # replace all
-                keyboard[article] = [article[article.find(" ") + 1:].replace(str(text), "")]
-                # print(article, [article[article.find(" ")+1:].replace(str(text),"")])
-            elif text_code == 3:  # replace right one
-                cut_article = article[article.find(" ") + 1:]
-                cut_art_re = cut_article[::-1]
-                text_re = text[::-1]
+                    keyboard[article] = [pull]
+                    # print(article, [article[article.find(" ")+1:].replace(str(text),"")])
+                elif text_code == 2:  # replace all
+                    keyboard[article] = [article[article.find(" ") + 1:].replace(str(text), "")]
+                    # print(article, [article[article.find(" ")+1:].replace(str(text),"")])
+                elif text_code == 3:  # replace right one
+                    cut_article = article[article.find(" ") + 1:]
+                    cut_art_re = cut_article[::-1]
+                    text_re = text[::-1]
 
-                el_art = (cut_art_re.find(text_re) + len(text_re))
-                arg1 = str(cut_art_re[:el_art].replace(text_re, ""))
-                arg2 = str(cut_art_re[el_art:])
-                pull = "".join((arg1, arg2))[::-1]
-                keyboard[article] = [pull]
-                # print(article, [pull])
+                    el_art = (cut_art_re.find(text_re) + len(text_re))
+                    arg1 = str(cut_art_re[:el_art].replace(text_re, ""))
+                    arg2 = str(cut_art_re[el_art:])
+                    pull = "".join((arg1, arg2))[::-1]
+                    keyboard[article] = [pull]
+                    # print(article, [pull])
+                else:
+                    keyboard[article] = []
             else:
                 keyboard[article] = []
             keyboard_db[article] = []
@@ -323,6 +326,12 @@ class MyWindow(QMainWindow):
         self.switch_box_1 = QCheckBox()
         self.switch_box_1.stateChanged.connect(self.Clicke_box_1)
 
+        self.labelb_2 = QLabel()
+        self.labelb_2.setText("Add article same to same")
+        self.labelb_2.setFixedHeight(12)
+        self.switch_box_2 = QCheckBox()
+        self.switch_box_2.stateChanged.connect(self.Clicke_box_2)
+
         #self.Clicked_on_1(switch_box_1.checkState())
 
         self.labelb1 = QLabel()
@@ -356,6 +365,8 @@ class MyWindow(QMainWindow):
         layout.addWidget(self.switch_box3, 4, 2)
         layout.addWidget(self.labelb_1, 5, 1)
         layout.addWidget(self.switch_box_1,5,0)
+        layout.addWidget(self.labelb_2, 5, 3)
+        layout.addWidget(self.switch_box_2, 5, 4)
         layout.addWidget(button1,3,3)
         central_widget.setLayout(layout)
     def Clicke_box_1(self,status):
@@ -365,7 +376,12 @@ class MyWindow(QMainWindow):
             self.switch_box1.setChecked(False)
             self.switch_box2.setChecked(False)
             self.switch_box3.setChecked(False)
+            self.switch_box_2.setChecked(False)
             self.activate_get = -1
+
+    def Clicke_box_2(self, status):
+        self.switch_box_1.setChecked(True)
+
     def Clicke_box1(self,status):
         #if str(self.switch_box2.checkState()) == "CheckState.Checked":
         self.switch_box2.setChecked(False)
@@ -393,23 +409,30 @@ class MyWindow(QMainWindow):
         self.switch_box_1.setChecked(True)
 
     def start_app(self):
+        check_el_2 = 0
         print("------------------------------")
         print(self.switch_box_1.checkState())
+        print(self.switch_box_2.checkState())
         print(self.switch_box1.checkState())
         print(self.switch_box2.checkState())
         print(self.switch_box3.checkState())
         print("------------------------------")
 
-        if (self.switch_box1.checkState()) == "CheckState.Checked":
-            main_call(1, str(self.edit_place.text()))
+        if str(self.switch_box_2.checkState()) == "CheckState.Checked":
+            check_el_2 = 1
+        elif str(self.switch_box_2.checkState()) == "UncheckState.Checked":
+            check_el_2 = 0
+
+        if str(self.switch_box1.checkState()) == "CheckState.Checked":
+            main_call(1, str(self.edit_place.text()),check_el_2)
         elif str(self.switch_box2.checkState()) == "CheckState.Checked":
-            main_call(2, str(self.edit_place.text()))
+            main_call(2, str(self.edit_place.text()),check_el_2)
         elif str(self.switch_box3.checkState()) == "CheckState.Checked":
-            main_call(3, str(self.edit_place.text()))
+            main_call(3, str(self.edit_place.text()),check_el_2)
         elif str(self.switch_box_1.checkState()) == "CheckState.Checked":
-            main_call(int(0), None)
+            main_call(int(0), None, check_el_2)
         else:
-            main_call(None, None)
+            main_call(None, None, None)
 
 # Create and run the application
 app = QApplication(sys.argv)
